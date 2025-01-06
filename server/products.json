@@ -1,0 +1,51 @@
+{
+  "products": [
+    {
+      "modelName": "TEST",
+      "lotNo": "50",
+      "quantity": "5555",
+      "route": "ROUTE2",
+      "position": {
+        "x": 1100,
+        "y": 132
+      },
+      "currentPosition": "출하 대기",
+      "afviStatus": {
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
+        "history": [
+          {
+            "subProcess": "3D_BGA",
+            "machine": "3D_BGA_1",
+            "startTime": "2025-01-06T07:41:01.655Z",
+            "endTime": "2025-01-06T07:41:04.176Z"
+          },
+          {
+            "subProcess": "2D_BGA",
+            "machine": "2D_BGA_1",
+            "startTime": "2025-01-06T07:41:04.176Z",
+            "endTime": "2025-01-06T07:41:06.279Z"
+          },
+          {
+            "subProcess": "IVS",
+            "machine": "IVS",
+            "startTime": "2025-01-06T07:41:06.279Z",
+            "endTime": "2025-01-06T07:41:08.911Z"
+          },
+          {
+            "subProcess": "Sorter",
+            "machine": "Sorter_1",
+            "startTime": "2025-01-06T07:41:08.911Z",
+            "endTime": "2025-01-06T07:41:09.462Z"
+          }
+        ]
+      },
+      "registeredAt": "2025-01-06T07:40:39.733Z",
+      "status": "shipped",
+      "id": "product-1736149239737",
+      "shippedAt": "2025-01-06T07:41:14.960Z",
+      "totalTime": 35227
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "nodes": [
+    {
+      "id": "process-1735806362960",
+      "type": "process",
+      "position": {
+        "x": -1247.79393888368,
+        "y": -389.7738905929847
+      },
+      "data": {
+        "label": "AFVI"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735806377888",
+      "type": "process",
+      "position": {
+        "x": -1815.3907511660798,
+        "y": 28.439502265453598
+      },
+      "data": {
+        "label": "입고"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735806907883",
+      "type": "process",
+      "position": {
+        "x": 11.308118737034448,
+        "y": 15.549908907576892
+      },
+      "data": {
+        "label": "FQA"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735806914550",
+      "type": "process",
+      "position": {
+        "x": -667.6807808912209,
+        "y": 12.885331990224358
+      },
+      "data": {
+        "label": "FVI"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735806920458",
+      "type": "process",
+      "position": {
+        "x": 694.138247479387,
+        "y": 17.540019701767967
+      },
+      "data": {
+        "label": "PACKING"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735806952146",
+      "type": "process",
+      "position": {
+        "x": 1129.7471474377676,
+        "y": 24.929232674280982
+      },
+      "data": {
+        "label": "출하 대기"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735807053577",
+      "type": "process",
+      "position": {
+        "x": -1371.0398881385233,
+        "y": -272.77182739459795
+      },
+      "data": {
+        "label": "3D_BGA_1"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735807061129",
+      "type": "process",
+      "position": {
+        "x": -1123.979801738908,
+        "y": -272.77182739459795
+      },
+      "data": {
+        "label": "3D_BGA_2"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735807078521",
+      "type": "process",
+      "position": {
+        "x": -1373.495104556552,
+        "y": -196.82234161046975
+      },
+      "data": {
+        "label": "2D_BGA_1"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735807107297",
+      "type": "process",
+      "position": {
+        "x": -1124.4200931519754,
+        "y": -196.82234161046975
+      },
+      "data": {
+        "label": "2D_BGA_2"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735807117797",
+      "type": "process",
+      "position": {
+        "x": -1123.0433603622055,
+        "y": -128.48766150290675
+      },
+      "data": {
+        "label": "IVS"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735807130301",
+      "type": "process",
+      "position": {
+        "x": -1371.537147682096,
+        "y": -47.572325144329454
+      },
+      "data": {
+        "label": "Sorter_1"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735807136829",
+      "type": "process",
+      "position": {
+        "x": -1123.975214079994,
+        "y": -47.572325144329454
+      },
+      "data": {
+        "label": "Sorter_2"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "process-1735807255525",
+      "type": "process",
+      "position": {
+        "x": -1371.5420443144938,
+        "y": -128.82917035642947
+      },
+      "data": {
+        "label": "IVS"
+      },
+      "measured": {
+        "width": 174,
+        "height": 48
+      },
+      "selected": false,
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "source": "process-1735806920458",
+      "target": "process-1735806952146",
+      "id": "xy-edge__process-1735806920458-process-1735806952146",
+      "selected": false
+    },
+    {
+      "source": "process-1735806362960",
+      "target": "process-1735807053577",
+      "id": "xy-edge__process-1735806362960-process-1735807053577",
+      "selected": false
+    },
+    {
+      "source": "process-1735807061129",
+      "target": "process-1735806362960",
+      "id": "xy-edge__process-1735807061129-process-1735806362960",
+      "selected": false
+    },
+    {
+      "source": "process-1735807053577",
+      "target": "process-1735807078521",
+      "id": "xy-edge__process-1735807053577-process-1735807078521",
+      "selected": false
+    },
+    {
+      "source": "process-1735807107297",
+      "target": "process-1735807061129",
+      "id": "xy-edge__process-1735807107297-process-1735807061129",
+      "selected": false
+    },
+    {
+      "source": "process-1735807107297",
+      "target": "process-1735807117797",
+      "id": "xy-edge__process-1735807107297-process-1735807117797",
+      "selected": false
+    },
+    {
+      "source": "process-1735807078521",
+      "target": "process-1735807255525",
+      "id": "xy-edge__process-1735807078521-process-1735807255525",
+      "selected": false
+    },
+    {
+      "source": "process-1735807255525",
+      "target": "process-1735807130301",
+      "id": "xy-edge__process-1735807255525-process-1735807130301",
+      "selected": false
+    },
+    {
+      "source": "process-1735807117797",
+      "target": "process-1735807136829",
+      "id": "xy-edge__process-1735807117797-process-1735807136829",
+      "selected": false
+    }
+  ]
+}
