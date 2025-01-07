@@ -237,6 +237,197 @@
       },
       "selected": false,
       "dragging": false
+    },
+    {
+      "id": "product-1736148019146",
+      "type": "product",
+      "position": {
+        "x": -1279,
+        "y": 150
+      },
+      "data": {
+        "modelName": "test",
+        "lotNo": "test",
+        "quantity": "5",
+        "route": "ROUTE2",
+        "position": {
+          "x": -1279,
+          "y": 150
+        },
+        "currentPosition": "AFVI",
+        "afviStatus": {
+          "currentSubProcess": "Sorter",
+          "currentMachine": "Sorter_2",
+          "startTime": "2025-01-06T07:35:36.025Z",
+          "history": [
+            {
+              "subProcess": "3D_BGA",
+              "machine": "3D_BGA_1",
+              "startTime": "2025-01-06T07:20:37.475Z",
+              "endTime": "2025-01-06T07:20:52.373Z"
+            },
+            {
+              "subProcess": "2D_BGA",
+              "machine": "2D_BGA_1",
+              "startTime": "2025-01-06T07:20:52.373Z",
+              "endTime": "2025-01-06T07:35:19.338Z"
+            },
+            {
+              "subProcess": "IVS",
+              "machine": "IVS",
+              "startTime": "2025-01-06T07:35:19.337Z",
+              "endTime": "2025-01-06T07:35:36.025Z"
+            }
+          ]
+        },
+        "registeredAt": "2025-01-06T07:20:19.150Z",
+        "status": "registered",
+        "id": "product-1736148019146",
+        "label": "test"
+      },
+      "measured": {
+        "width": 234,
+        "height": 276
+      }
+    },
+    {
+      "id": "product-1736148024826",
+      "type": "product",
+      "position": {
+        "x": -1279,
+        "y": 400
+      },
+      "data": {
+        "modelName": "test2",
+        "lotNo": "test",
+        "quantity": "54",
+        "route": "ROUTE2",
+        "position": {
+          "x": -1279,
+          "y": 400
+        },
+        "currentPosition": "AFVI",
+        "afviStatus": {
+          "currentSubProcess": "2D_BGA",
+          "currentMachine": "2D_BGA_2",
+          "startTime": "2025-01-06T07:20:55.949Z",
+          "history": [
+            {
+              "subProcess": "3D_BGA",
+              "machine": "3D_BGA_2",
+              "startTime": "2025-01-06T07:20:42.670Z",
+              "endTime": "2025-01-06T07:20:55.949Z"
+            }
+          ]
+        },
+        "registeredAt": "2025-01-06T07:20:24.829Z",
+        "status": "registered",
+        "id": "product-1736148024826",
+        "label": "test2"
+      },
+      "measured": {
+        "width": 234,
+        "height": 276
+      }
+    },
+    {
+      "id": "product-1736148033126",
+      "type": "product",
+      "position": {
+        "x": -1279,
+        "y": 650
+      },
+      "data": {
+        "modelName": "123",
+        "lotNo": "123",
+        "quantity": "123",
+        "route": "ROUTE2",
+        "position": {
+          "x": -1279,
+          "y": 650
+        },
+        "currentPosition": "AFVI",
+        "afviStatus": {
+          "currentSubProcess": "3D_BGA",
+          "currentMachine": "3D_BGA_1",
+          "startTime": "2025-01-06T07:20:59.542Z",
+          "history": []
+        },
+        "registeredAt": "2025-01-06T07:20:33.129Z",
+        "status": "registered",
+        "id": "product-1736148033126",
+        "label": "123"
+      },
+      "measured": {
+        "width": 234,
+        "height": 276
+      }
+    },
+    {
+      "id": "product-1736210216114",
+      "type": "product",
+      "position": {
+        "x": -1845,
+        "y": 178
+      },
+      "data": {
+        "modelName": "입고",
+        "lotNo": "입고테스트",
+        "quantity": "1",
+        "route": "ROUTE2",
+        "position": {
+          "x": -1845,
+          "y": 178
+        },
+        "currentPosition": "입고",
+        "afviStatus": {
+          "currentSubProcess": null,
+          "currentMachine": null,
+          "startTime": null,
+          "history": []
+        },
+        "registeredAt": "2025-01-07T00:36:56.109Z",
+        "status": "registered",
+        "id": "product-1736210216114",
+        "label": "입고"
+      },
+      "measured": {
+        "width": 234,
+        "height": 236
+      }
+    },
+    {
+      "id": "product-1736210222209",
+      "type": "product",
+      "position": {
+        "x": -1845,
+        "y": 478
+      },
+      "data": {
+        "modelName": "입고2",
+        "lotNo": "입고테스트2",
+        "quantity": "5",
+        "route": "ROUTE1",
+        "position": {
+          "x": -1845,
+          "y": 478
+        },
+        "currentPosition": "입고",
+        "afviStatus": {
+          "currentSubProcess": null,
+          "currentMachine": null,
+          "startTime": null,
+          "history": []
+        },
+        "registeredAt": "2025-01-07T00:37:02.205Z",
+        "status": "registered",
+        "id": "product-1736210222209",
+        "label": "입고2"
+      },
+      "measured": {
+        "width": 234,
+        "height": 236
+      }
     }
   ],
   "edges": [
