@@ -31,6 +31,8 @@ function ProductRegistration({ onProductRegistered }) {
             startTime: null,
             history: []
           },
+          isHolding: false,
+          holdingMemo: null,
           registeredAt: new Date().toISOString(),
           status: 'registered'
         }),

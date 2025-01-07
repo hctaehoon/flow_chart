@@ -16,16 +16,6 @@ import { resetProcessCounter, incrementProcessCounter, initializeYPositions } fr
 
 const API_URL = 'http://localhost:3001/api';
 
-// ProcessNode를 메모이제이션
-const MemoizedProcessNode = React.memo(({ products, ...props }) => (
-  <ProcessNode {...props} products={products} />
-));
-
-// 기본 nodeTypes 정의
-const defaultNodeTypes = {
-  product: ProductNode
-};
-
 function App() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
@@ -34,11 +24,17 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ProcessNode를 메모이제이션
+  const MemoizedProcessNode = useMemo(() => 
+    React.memo(props => <ProcessNode {...props} products={products} />),
+    [products]
+  );
+
   // nodeTypes를 메모이제이션
   const nodeTypes = useMemo(() => ({
-    ...defaultNodeTypes,
-    process: (props) => <MemoizedProcessNode {...props} products={products} />
-  }), [products]);
+    process: MemoizedProcessNode,
+    product: ProductNode
+  }), [MemoizedProcessNode]);
 
   // 2. 모든 callback hooks
   const onNodesChange = useCallback(

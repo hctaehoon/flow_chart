@@ -15,8 +15,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = 3001;
 
-app.use(cors());
+// CORS 설정 수정
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  credentials: true
+}));
+
+// body-parser 미들웨어 설정
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const DB_PATH = path.join(__dirname, 'db.json');
 
@@ -112,14 +120,7 @@ const initProductsDB = async () => {
 const readProducts = async () => {
   try {
     const data = await fs.readFile(PRODUCTS_PATH, 'utf-8');
-    if (!data) {
-      return { products: [] };
-    }
-    const parsed = JSON.parse(data);
-    if (!parsed.products) {
-      return { products: [] };
-    }
-    return parsed;
+    return JSON.parse(data);
   } catch (error) {
     console.error('Error reading products:', error);
     return { products: [] };
@@ -128,30 +129,45 @@ const readProducts = async () => {
 
 // 제품 데이터 쓰기
 const writeProducts = async (data) => {
-  await fs.writeFile(PRODUCTS_PATH, JSON.stringify(data, null, 2));
+  try {
+    await fs.writeFile(PRODUCTS_PATH, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error('Error writing products:', error);
+    throw error;
+  }
 };
 
-// 제품 등록 API
-app.post('/api/products', async (req, res) => {
+// 제품 관련 API 라우트들을 하나의 라우터로 그룹화
+const productRouter = express.Router();
+
+// 제품 목록 조회
+productRouter.get('/', async (req, res) => {
   try {
     const data = await readProducts();
-    if (!data.products) {
-      data.products = [];
-    }
-    
+    res.json(data.products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 제품 등록
+productRouter.post('/', async (req, res) => {
+  try {
+    const data = await readProducts();
     const newProduct = {
       ...req.body,
       id: `product-${Date.now()}`,
-      registeredAt: req.body.registeredAt || new Date().toISOString(),
-      status: req.body.status || 'registered',
-      currentPosition: req.body.currentPosition || '입고',
-      position: req.body.position || calculateNodePosition('입고')
+      registeredAt: new Date().toISOString(),
+      status: 'registered',
+      currentPosition: '입고',
+      position: calculateNodePosition('입고'),
+      isHolding: false,
+      holdingMemo: null
     };
     
     data.products.push(newProduct);
     await writeProducts(data);
     
-    // db.json에도 노드 추가
     const dbData = await readDB();
     dbData.nodes.push({
       id: newProduct.id,
@@ -166,20 +182,57 @@ app.post('/api/products', async (req, res) => {
     
     res.json(newProduct);
   } catch (error) {
-    console.error('Error registering product:', error);
-    res.status(500).json({ error: 'Failed to register product' });
-  }
-});
-
-// 제품 목록 조회 API
-app.get('/api/products', async (req, res) => {
-  try {
-    const data = await readProducts();
-    res.json(data.products);
-  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+// 홀딩 상태 업데이트
+productRouter.patch('/:id/holding', async (req, res) => {
+  try {
+    const productId = req.params.id;
+    console.log('Received holding request:', { productId, body: req.body });
+
+    const data = await readProducts();
+    const productIndex = data.products.findIndex(p => p.id === productId);
+    
+    if (productIndex === -1) {
+      return res.status(404).json({ 
+        error: `Product not found: ${productId}` 
+      });
+    }
+
+    const updatedProduct = {
+      ...data.products[productIndex],
+      isHolding: req.body.isHolding,
+      holdingMemo: req.body.isHolding ? req.body.holdingMemo : null
+    };
+
+    data.products[productIndex] = updatedProduct;
+    await writeProducts(data);
+
+    const dbData = await readDB();
+    const nodeIndex = dbData.nodes.findIndex(n => n.id === productId);
+    if (nodeIndex !== -1) {
+      dbData.nodes[nodeIndex] = {
+        ...dbData.nodes[nodeIndex],
+        data: {
+          ...dbData.nodes[nodeIndex].data,
+          isHolding: req.body.isHolding,
+          holdingMemo: req.body.isHolding ? req.body.holdingMemo : null
+        }
+      };
+      await writeDB(dbData);
+    }
+
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error('Error updating holding status:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 라우터 등록
+app.use('/api/products', productRouter);
 
 // 모든 노드와 엣지 가져오기
 app.get('/api/flow', async (req, res) => {
@@ -367,8 +420,22 @@ app.patch('/api/nodes/:id', async (req, res) => {
   }
 });
 
-Promise.all([initDB(), initProductsDB()]).then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}); 
+// 서버 초기화 및 시작
+const initializeServer = async () => {
+  try {
+    await Promise.all([initDB(), initProductsDB()]);
+    
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+      console.log('API endpoints:');
+      console.log('GET     /api/products');
+      console.log('POST    /api/products');
+      console.log('PATCH   /api/products/:id/holding');
+    });
+  } catch (error) {
+    console.error('Server initialization failed:', error);
+    process.exit(1);
+  }
+};
+
+initializeServer(); 

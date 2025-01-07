@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getModelColor } from '../utils/colorUtils';
+import HoldingMemoModal from './HoldingMemoModal';
 
 function formatDuration(ms) {
   const seconds = Math.floor(ms / 1000);
@@ -20,6 +21,8 @@ function ShippingPanel() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showCompleted, setShowCompleted] = useState(true);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showHoldingModal, setShowHoldingModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // 제품 데이터 로드 함수
   const loadProducts = async () => {
@@ -116,6 +119,67 @@ function ShippingPanel() {
 
   const analytics = getShippingAnalytics(shippedProducts);
 
+  // 홀딩 상태 업데이트 함수
+  const updateHoldingStatus = async (productId, isHolding, holdingMemo = null) => {
+    try {
+      console.log('Attempting to update holding status:', {
+        productId,
+        isHolding,
+        holdingMemo
+      });
+
+      const response = await fetch(`http://localhost:3001/api/products/${productId}/holding`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          isHolding,
+          holdingMemo
+        })
+      });
+
+      const contentType = response.headers.get('content-type');
+      if (!response.ok) {
+        let errorMessage;
+        try {
+          if (contentType?.includes('application/json')) {
+            const errorData = await response.json();
+            errorMessage = errorData.error || 'Unknown error occurred';
+          } else {
+            const errorText = await response.text();
+            errorMessage = `Server error: ${errorText}`;
+          }
+        } catch (e) {
+          errorMessage = `Failed to update holding status (${response.status})`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const result = await response.json();
+      console.log('Successfully updated holding status:', result);
+      
+      // 제품 목록 새로고침
+      await loadProducts();
+      return result;
+    } catch (error) {
+      console.error('Error in updateHoldingStatus:', error);
+      throw error;
+    }
+  };
+
+  // 홀딩 모달 저장 핸들러
+  const handleHoldingSave = async (memo) => {
+    try {
+      await updateHoldingStatus(selectedProduct.id, true, memo);
+      setShowHoldingModal(false);
+      setSelectedProduct(null);
+    } catch (error) {
+      alert(`홀딩 상태 업데이트 실패: ${error.message}`);
+    }
+  };
+
   return (
     <div style={{
       position: 'fixed',
@@ -205,13 +269,45 @@ function ShippingPanel() {
               marginBottom: '10px',
               border: '1px solid #ddd',
               borderRadius: '5px',
-              backgroundColor: `${getModelColor(product.modelName)}22`
+              backgroundColor: `${getModelColor(product.modelName)}11`,
+              position: 'relative'
             }}>
+              <div style={{
+                position: 'absolute',
+                right: '10px',
+                top: '10px',
+                cursor: 'pointer'
+              }}>
+                <span 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!product.isHolding) {
+                      setSelectedProduct(product);
+                      setShowHoldingModal(true);
+                    } else {
+                      updateHoldingStatus(product.id, false);
+                    }
+                  }}
+                  style={{
+                    color: product.isHolding ? 'red' : '#00000022',
+                    fontSize: '20px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🚩
+                </span>
+              </div>
+              
               <p><strong>모델명:</strong> {product.modelName}</p>
               <p><strong>LOT NO:</strong> {product.lotNo}</p>
               <p><strong>현재 공정:</strong> {product.currentPosition}</p>
               <p><strong>입고 시간:</strong> {new Date(product.registeredAt).toLocaleString()}</p>
               <p><strong>대기 시간:</strong> {calculateWaitingTime(product.registeredAt)}</p>
+              {product.isHolding && product.holdingMemo && (
+                <p style={{ color: 'red', marginTop: '10px' }}>
+                  <strong>홀딩 사유:</strong> {product.holdingMemo}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -368,6 +464,17 @@ function ShippingPanel() {
           )}
         </div>
       </div>
+
+      {/* 홀딩 메모 모달 */}
+      {showHoldingModal && selectedProduct && (
+        <HoldingMemoModal
+          onClose={() => {
+            setShowHoldingModal(false);
+            setSelectedProduct(null);
+          }}
+          onSave={handleHoldingSave}
+        />
+      )}
     </div>
   );
 }

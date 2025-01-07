@@ -2398,14 +2398,14 @@
       "quantity": "5",
       "route": "ROUTE2",
       "position": {
-        "x": -1279,
-        "y": 150
+        "x": 1100,
+        "y": 132
       },
-      "currentPosition": "AFVI",
+      "currentPosition": "출하 대기",
       "afviStatus": {
-        "currentSubProcess": "Sorter",
-        "currentMachine": "Sorter_2",
-        "startTime": "2025-01-06T07:35:36.025Z",
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
         "history": [
           {
             "subProcess": "3D_BGA",
@@ -2424,12 +2424,20 @@
             "machine": "IVS",
             "startTime": "2025-01-06T07:35:19.337Z",
             "endTime": "2025-01-06T07:35:36.025Z"
+          },
+          {
+            "subProcess": "Sorter",
+            "machine": "Sorter_2",
+            "startTime": "2025-01-06T07:35:36.025Z",
+            "endTime": "2025-01-07T00:44:17.204Z"
           }
         ]
       },
       "registeredAt": "2025-01-06T07:20:19.150Z",
-      "status": "registered",
-      "id": "product-1736148019146"
+      "status": "shipped",
+      "id": "product-1736148019146",
+      "shippedAt": "2025-01-07T00:44:39.646Z",
+      "totalTime": 62660496
     },
     {
       "modelName": "test2",
@@ -2442,21 +2450,29 @@
       },
       "currentPosition": "AFVI",
       "afviStatus": {
-        "currentSubProcess": "2D_BGA",
-        "currentMachine": "2D_BGA_2",
-        "startTime": "2025-01-06T07:20:55.949Z",
+        "currentSubProcess": "IVS",
+        "currentMachine": "IVS",
+        "startTime": "2025-01-07T06:44:28.149Z",
         "history": [
           {
             "subProcess": "3D_BGA",
             "machine": "3D_BGA_2",
             "startTime": "2025-01-06T07:20:42.670Z",
             "endTime": "2025-01-06T07:20:55.949Z"
+          },
+          {
+            "subProcess": "2D_BGA",
+            "machine": "2D_BGA_2",
+            "startTime": "2025-01-06T07:20:55.949Z",
+            "endTime": "2025-01-07T06:44:28.149Z"
           }
         ]
       },
       "registeredAt": "2025-01-06T07:20:24.829Z",
       "status": "registered",
-      "id": "product-1736148024826"
+      "id": "product-1736148024826",
+      "isHolding": false,
+      "holdingMemo": null
     },
     {
       "modelName": "123",
@@ -2464,19 +2480,46 @@
       "quantity": "123",
       "route": "ROUTE2",
       "position": {
-        "x": -1279,
-        "y": 650
+        "x": -23,
+        "y": 130
       },
-      "currentPosition": "AFVI",
+      "currentPosition": "FQA",
       "afviStatus": {
-        "currentSubProcess": "3D_BGA",
-        "currentMachine": "3D_BGA_1",
-        "startTime": "2025-01-06T07:20:59.542Z",
-        "history": []
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
+        "history": [
+          {
+            "subProcess": "3D_BGA",
+            "machine": "3D_BGA_1",
+            "startTime": "2025-01-06T07:20:59.542Z",
+            "endTime": "2025-01-07T00:43:36.315Z"
+          },
+          {
+            "subProcess": "2D_BGA",
+            "machine": "2D_BGA_1",
+            "startTime": "2025-01-07T00:43:36.315Z",
+            "endTime": "2025-01-07T00:43:51.562Z"
+          },
+          {
+            "subProcess": "IVS",
+            "machine": "IVS",
+            "startTime": "2025-01-07T00:43:51.562Z",
+            "endTime": "2025-01-07T04:38:29.507Z"
+          },
+          {
+            "subProcess": "Sorter",
+            "machine": "Sorter_1",
+            "startTime": "2025-01-07T04:38:29.507Z",
+            "endTime": "2025-01-07T04:38:33.055Z"
+          }
+        ]
       },
       "registeredAt": "2025-01-06T07:20:33.129Z",
       "status": "registered",
-      "id": "product-1736148033126"
+      "id": "product-1736148033126",
+      "isHolding": false,
+      "holdingMemo": null
     },
     {
       "modelName": "입고",
@@ -2484,19 +2527,46 @@
       "quantity": "1",
       "route": "ROUTE2",
       "position": {
-        "x": -1845,
-        "y": 178
+        "x": -698,
+        "y": 128
       },
-      "currentPosition": "입고",
+      "currentPosition": "FVI",
       "afviStatus": {
         "currentSubProcess": null,
         "currentMachine": null,
         "startTime": null,
-        "history": []
+        "history": [
+          {
+            "subProcess": "3D_BGA",
+            "machine": "3D_BGA_1",
+            "startTime": "2025-01-07T06:42:22.666Z",
+            "endTime": "2025-01-07T06:42:26.499Z"
+          },
+          {
+            "subProcess": "2D_BGA",
+            "machine": "2D_BGA_1",
+            "startTime": "2025-01-07T06:42:26.499Z",
+            "endTime": "2025-01-07T06:42:28.779Z"
+          },
+          {
+            "subProcess": "IVS",
+            "machine": "IVS",
+            "startTime": "2025-01-07T06:42:28.779Z",
+            "endTime": "2025-01-07T06:42:32.209Z"
+          },
+          {
+            "subProcess": "Sorter",
+            "machine": "Sorter_1",
+            "startTime": "2025-01-07T06:42:32.209Z",
+            "endTime": "2025-01-07T06:44:23.019Z"
+          }
+        ]
       },
       "registeredAt": "2025-01-07T00:36:56.109Z",
       "status": "registered",
-      "id": "product-1736210216114"
+      "id": "product-1736210216114",
+      "isHolding": true,
+      "holdingMemo": "유닛 부서짐"
     },
     {
       "modelName": "입고2",
@@ -2504,10 +2574,10 @@
       "quantity": "5",
       "route": "ROUTE1",
       "position": {
-        "x": -1845,
-        "y": 478
+        "x": 1100,
+        "y": 132
       },
-      "currentPosition": "입고",
+      "currentPosition": "출하 대기",
       "afviStatus": {
         "currentSubProcess": null,
         "currentMachine": null,
@@ -2515,8 +2585,81 @@
         "history": []
       },
       "registeredAt": "2025-01-07T00:37:02.205Z",
+      "status": "shipped",
+      "id": "product-1736210222209",
+      "shippedAt": "2025-01-07T02:46:49.216Z",
+      "totalTime": 7787011
+    },
+    {
+      "modelName": "24FCS104-02",
+      "lotNo": "13949450S",
+      "quantity": 400,
+      "route": "ROUTE2",
+      "position": {
+        "x": -1279,
+        "y": 150
+      },
+      "currentPosition": "AFVI",
+      "afviStatus": {
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
+        "history": [
+          {
+            "subProcess": "3D_BGA",
+            "machine": "3D_BGA_2",
+            "startTime": "2025-01-07T00:46:55.133Z",
+            "endTime": "2025-01-07T00:46:59.501Z"
+          },
+          {
+            "subProcess": "2D_BGA",
+            "machine": "2D_BGA_1",
+            "startTime": "2025-01-07T00:46:59.501Z",
+            "endTime": "2025-01-07T00:47:03.139Z"
+          },
+          {
+            "subProcess": "IVS",
+            "machine": "IVS",
+            "startTime": "2025-01-07T00:47:03.139Z",
+            "endTime": "2025-01-07T00:47:05.755Z"
+          },
+          {
+            "subProcess": "Sorter",
+            "machine": "Sorter_1",
+            "startTime": "2025-01-07T00:47:05.755Z",
+            "endTime": "2025-01-07T00:47:07.831Z"
+          }
+        ]
+      },
+      "registeredAt": "2025-01-07T00:46:44.543Z",
       "status": "registered",
-      "id": "product-1736210222209"
+      "id": "product-1736210804547",
+      "isHolding": false,
+      "holdingMemo": null
+    },
+    {
+      "modelName": "7A66-0924",
+      "lotNo": "0418",
+      "quantity": "3500",
+      "route": "ROUTE1",
+      "position": {
+        "x": 1100,
+        "y": 132
+      },
+      "currentPosition": "출하 대기",
+      "afviStatus": {
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
+        "history": []
+      },
+      "isHolding": false,
+      "holdingMemo": null,
+      "registeredAt": "2025-01-07T06:45:44.770Z",
+      "status": "shipped",
+      "id": "product-1736232344770",
+      "shippedAt": "2025-01-07T06:45:56.403Z",
+      "totalTime": 11633
     }
   ]
 }
