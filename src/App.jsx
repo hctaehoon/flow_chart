@@ -13,6 +13,7 @@ import ProductRegistration from './components/ProductRegistration';
 import ShippingPanel from './components/ShippingPanel';
 import { PROCESS_POSITIONS } from './constants/processPositions';
 import { resetProcessCounter, incrementProcessCounter, initializeYPositions } from './utils/nodeUtils';
+import { api } from './utils/apiConfig';
 
 const API_URL = 'http://localhost:3001/api';
 
@@ -190,17 +191,11 @@ function App() {
     const loadInitialData = async () => {
       try {
         setIsLoading(true);
-        const flowResponse = await fetch(`${API_URL}/flow`);
-        if (!flowResponse.ok) {
-          throw new Error('Failed to load flow data');
-        }
-        const flowData = await flowResponse.json();
+        const flowData = await api.get('/api/flow');
         setNodes(flowData.nodes || []);
         setEdges(flowData.edges || []);
         
-        // Y 위치 초기화는 여기서 한 번만 수행
         initializeYPositions(flowData.nodes || []);
-        
         await loadProducts();
       } catch (error) {
         console.error('Error loading data:', error);

@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "server": "node server/index.js"
+    "preview": "vite preview --host 0.0.0.0 --port 5173",
+    "server": "node server/index.js",
+    "start": "node server/index.js",
+    "deploy": "bash deploy.sh"
   },
   "dependencies": {
     "@xyflow/react": "^12.3.6",

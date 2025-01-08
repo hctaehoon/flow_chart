@@ -290,19 +290,19 @@
       "id": "product-1736148033126",
       "type": "product",
       "position": {
-        "x": -23,
-        "y": 130
+        "x": -1279,
+        "y": 650
       },
       "data": {
         "modelName": "123",
         "lotNo": "123",
-        "quantity": "123",
+        "quantity": 123,
         "route": "ROUTE2",
         "position": {
-          "x": -23,
-          "y": 130
+          "x": -1279,
+          "y": 650
         },
-        "currentPosition": "FQA",
+        "currentPosition": "AFVI",
         "afviStatus": {
           "currentSubProcess": null,
           "currentMachine": null,
