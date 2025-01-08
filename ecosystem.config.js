@@ -14,6 +14,7 @@ module.exports = {
       name: "manufacturing-flow-backend",
       script: "./server/index.js",
       cwd: "./", // 프로젝트 루트 디렉토리
+      node_args: "--experimental-modules --es-module-specifier-resolution=node",
       env_production: {
         NODE_ENV: "production",
         PORT: 3001,

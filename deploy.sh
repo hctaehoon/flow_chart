@@ -4,8 +4,8 @@
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $PROJECT_DIR
 
-# 기존 PM2 프로세스 중지
-pm2 stop all
+# 기존 PM2 프로세스 중지 및 삭제
+pm2 delete all
 
 # 프론트엔드 빌드
 echo "Installing frontend dependencies..."
@@ -22,7 +22,11 @@ cd ..
 
 # PM2로 서비스 시작
 echo "Starting services with PM2..."
-pm2 start ecosystem.config.js --env production
+NODE_ENV=production pm2 start ecosystem.config.js --env production
+
+# PM2 설정 저장
+echo "Saving PM2 configuration..."
+pm2 save
 
 # PM2 상태 확인
 echo "PM2 status:"
