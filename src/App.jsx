@@ -5,7 +5,9 @@ import {
   Background,
   applyNodeChanges,
   applyEdgeChanges,
-  addEdge
+  addEdge,
+  MarkerType,
+  ConnectionMode
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ProcessNode, ProductNode } from './components/CustomNodes';
@@ -118,43 +120,26 @@ function App() {
   const loadProducts = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/api/products`);
-      if (!response.ok) {
-        throw new Error('Failed to load products');
-      }
-      const productsData = await response.json();
-
-      // 공정별 카운터 초기화
-      Object.keys(PROCESS_POSITIONS).forEach(processName => {
-        resetProcessCounter(processName);
-      });
-
-      // 현재 공정별 제품 수를 기준으로 카운터 설정
-      productsData
-        .filter(product => product.status === 'registered')
-        .forEach(product => {
-          incrementProcessCounter(product.currentPosition);
-        });
-
-      const productNodes = productsData
-        .filter(product => product.status === 'registered')
-        .map(product => ({
-          id: product.id,
-          type: 'product',
-          position: product.position,
-          data: {
-            ...product,
-            label: product.modelName
-          }
-        }));
-
-      setNodes(prevNodes => {
-        const processNodes = prevNodes.filter(node => node.type === 'process');
-        return [...processNodes, ...productNodes];
-      });
-      setProducts(productsData);
+      if (!response.ok) throw new Error('Failed to load products');
+      const products = await response.json();
+      
+      // 노드 데이터에 currentPosition이 제대로 설정되어 있는지 확인
+      const productNodes = products.map(product => ({
+        id: product.id,
+        type: 'product',
+        position: product.position,
+        data: {
+          ...product,
+          currentPosition: product.currentPosition,  // 이 부분 확인
+          label: product.modelName
+        }
+      }));
+      
+      setProducts(products);
+      setNodes(prev => [...prev.filter(node => node.type !== 'product'), ...productNodes]);
     } catch (error) {
       console.error('Error loading products:', error);
-      setError(error.message);
+      setError('Failed to load products');
     }
   }, []);
 
@@ -205,6 +190,17 @@ function App() {
 
     return () => clearInterval(interval);
   }, [loadProducts]);
+
+  const defaultEdgeOptions = {
+    type: 'smoothstep',
+    style: { stroke: '#666', strokeWidth: 2 },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 20,
+      height: 20,
+      color: '#666',
+    },
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -258,14 +254,11 @@ function App() {
         onNodeClick={onNodeClick}
         onNodeDoubleClick={onNodeDoubleClick}
         fitView
-        nodesDraggable={false}
-        nodesConnectable={false}
-        elementsSelectable={true}
-        panOnDrag={true}
-        zoomOnScroll={true}
+        defaultEdgeOptions={defaultEdgeOptions}
+        connectionMode={ConnectionMode.Loose}
       >
         <Background />
-        <Controls showInteractive={false} />
+        <Controls />
       </ReactFlow>
     </div>
   );
