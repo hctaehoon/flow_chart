@@ -18,9 +18,7 @@ const PORT = 3001;
 // CORS 설정 수정
 app.use(cors({
   origin: ['http://43.203.179.67:5173', 'http://localhost:5173'],
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  credentials: true
 }));
 
 // body-parser 미들웨어 설정

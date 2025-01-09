@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, memo } from 'react';
 import { 
   ReactFlow,
   Controls,
@@ -16,9 +16,12 @@ import { resetProcessCounter, incrementProcessCounter, initializeYPositions } fr
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const ProcessNodeMemo = memo(ProcessNode);
+const ProductNodeMemo = memo(ProductNode);
+
 const nodeTypes = {
-  process: ProcessNode,
-  product: ProductNode
+  process: ProcessNodeMemo,
+  product: ProductNodeMemo
 };
 
 function App() {
@@ -28,18 +31,6 @@ function App() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // ProcessNode를 메모이제이션
-  const MemoizedProcessNode = useMemo(() => 
-    React.memo(props => <ProcessNode {...props} products={products} />),
-    [products]
-  );
-
-  // nodeTypes를 메모이제이션
-  const nodeTypes = useMemo(() => ({
-    process: MemoizedProcessNode,
-    product: ProductNode
-  }), [MemoizedProcessNode]);
 
   // 노드 변경 처리
   const onNodesChange = useCallback((changes) => {

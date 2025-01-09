@@ -25,7 +25,9 @@ const processColors = {
 
 export function ProcessNode({ data, products = [] }) {
   const isInUse = products?.some(product => 
-    product.afviStatus?.currentMachine === data.label
+    product.currentPosition === 'AFVI' && 
+    product.afviStatus?.currentMachine === data.label && 
+    !product.afviStatus?.history?.some(h => h.machine === data.label)
   );
 
   return (
