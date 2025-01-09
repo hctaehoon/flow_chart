@@ -17,7 +17,6 @@ function ProductRegistration({ onProductRegistered }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // localhost 대신 EC2 서버 IP 사용
       const response = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: {
@@ -30,7 +29,18 @@ function ProductRegistration({ onProductRegistered }) {
       
       const result = await response.json();
       console.log('Product registered:', result);
-      onClose();
+      
+      onProductRegistered();
+      
+      setFormData({
+        modelName: '',
+        lotNo: '',
+        quantity: '',
+        route: 'ROUTE1'
+      });
+      
+      setIsOpen(false);
+      
       window.location.reload();
     } catch (error) {
       console.error('Error registering product:', error);
