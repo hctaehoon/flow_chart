@@ -53,21 +53,19 @@ function App() {
     [edges]
   );
 
-  const onConnect = useCallback(
-    (params) => {
-      const updatedEdges = addEdge(params, edges);
-      setEdges(updatedEdges);
-
-      fetch(`${API_URL}/edges`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedEdges),
-      }).catch(console.error);
-    },
-    [edges]
-  );
+  const onConnect = useCallback((params) => {
+    // sourceHandle과 targetHandle이 있는지 확인
+    if (!params.sourceHandle || !params.targetHandle) {
+      console.warn('Missing handle IDs:', params);
+      return;
+    }
+    
+    setEdges((eds) => addEdge({
+      ...params,
+      type: 'smoothstep',
+      animated: true
+    }, eds));
+  }, []);
 
   const onNodeClick = useCallback((event, node) => {
     setSelectedNode(node);
@@ -263,6 +261,10 @@ function App() {
         elementsSelectable={true}
         panOnDrag={true}
         zoomOnScroll={true}
+        defaultEdgeOptions={{
+          type: 'smoothstep',
+          animated: true
+        }}
       >
         <Background />
         <Controls showInteractive={false} />

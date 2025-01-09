@@ -477,10 +477,12 @@
       "type": "smoothstep"
     },
     {
-      "source": "process-1735806362960",
-      "target": "process-1735807053577",
       "id": "xy-edge__process-1735806362960-process-1735807053577",
-      "selected": false
+      "source": "process-1735806362960",
+      "sourceHandle": "process-1735806362960-source",
+      "target": "process-1735807053577",
+      "targetHandle": "process-1735807053577-target",
+      "type": "smoothstep"
     },
     {
       "source": "process-1735807061129",

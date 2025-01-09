@@ -30,6 +30,10 @@ export function ProcessNode({ data, products = [] }) {
     !product.afviStatus?.history?.some(h => h.machine === data.label)
   );
 
+  // handleIds 생성
+  const sourceHandleId = `${data.id}-source`;
+  const targetHandleId = `${data.id}-target`;
+
   return (
     <div style={{
       padding: '10px',
@@ -41,17 +45,19 @@ export function ProcessNode({ data, products = [] }) {
       position: 'relative'
     }}>
       <Handle
-        id={`${data.id}-target`}
+        id={targetHandleId}
         type="target"
         position={Position.Top}
         style={{ background: '#555' }}
+        isValidConnection={(connection) => true}
       />
       {data.label}
       <Handle
-        id={`${data.id}-source`}
+        id={sourceHandleId}
         type="source"
         position={Position.Bottom}
         style={{ background: '#555' }}
+        isValidConnection={(connection) => true}
       />
     </div>
   );
