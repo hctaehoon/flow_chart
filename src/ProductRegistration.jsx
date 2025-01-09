@@ -6,8 +6,7 @@ const handleSubmit = async (e) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData),
-      credentials: 'include'
+      body: JSON.stringify(formData)
     });
 
     if (!response.ok) throw new Error('Failed to register product');

@@ -2,26 +2,15 @@ import React, { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { ROUTE_OPTIONS } from '../constants/routes';
 import { calculateNodePosition, updateProductPosition, moveToShippingList } from '../utils/nodeUtils';
-import { getModelColor } from '../utils/colorUtils';
+import { getModelColor, processColors, getNodeColor } from '../utils/colorUtils';
 import EditProductModal from './EditProductModal';
 import { useState } from 'react';
 import { MACHINE_STATUS_COLORS } from '../constants/afviProcess';
 import AfviProcessModal from './AfviProcessModal';
 import { AFVI_SUB_PROCESSES } from '../constants/afviProcess';
-import { getNodeColor } from '../utils/colorUtils';
 
 // API 기본 URL 설정
 const API_BASE_URL = 'http://43.203.179.67:3001';
-
-// 공정별 색상 정의
-const processColors = {
-  '입고': '#FF6B6B',      // 빨간색 계열
-  'FVI': '#4ECDC4',       // 청록색 계열
-  'FQA': '#45B7D1',       // 하늘색 계열
-  'PACKING': '#96CEB4',   // 민트색 계열
-  '출하 대기': '#FFD93D', // 노란색 계열
-  'AFVI': '#FF8B94'       // 분홍색 계열
-};
 
 export function ProcessNode({ data, products = [] }) {
   const isInUse = products?.some(product => 
