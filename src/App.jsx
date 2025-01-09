@@ -13,9 +13,8 @@ import ProductRegistration from './components/ProductRegistration';
 import ShippingPanel from './components/ShippingPanel';
 import { PROCESS_POSITIONS } from './constants/processPositions';
 import { resetProcessCounter, incrementProcessCounter, initializeYPositions } from './utils/nodeUtils';
-import { api } from './utils/apiConfig';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'http://43.203.179.67:3001/api';
 
 function App() {
   const [nodes, setNodes] = useState([]);
@@ -37,22 +36,10 @@ function App() {
     product: ProductNode
   }), [MemoizedProcessNode]);
 
-  // 2. 모든 callback hooks
-  const onNodesChange = useCallback(
-    (changes) => {
-      const updatedNodes = applyNodeChanges(changes, nodes);
-      setNodes(updatedNodes);
-      
-      fetch(`${API_URL}/nodes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedNodes),
-      }).catch(console.error);
-    },
-    [nodes]
-  );
+  // 노드 변경 처리
+  const onNodesChange = useCallback((changes) => {
+    setNodes((nds) => applyNodeChanges(changes, nds));
+  }, []);
 
   const onEdgesChange = useCallback(
     (changes) => {
@@ -191,11 +178,17 @@ function App() {
     const loadInitialData = async () => {
       try {
         setIsLoading(true);
-        const flowData = await api.get('/api/flow');
+        const flowResponse = await fetch(`${API_URL}/flow`);
+        if (!flowResponse.ok) {
+          throw new Error('Failed to load flow data');
+        }
+        const flowData = await flowResponse.json();
         setNodes(flowData.nodes || []);
         setEdges(flowData.edges || []);
         
+        // Y 위치 초기화는 여기서 한 번만 수행
         initializeYPositions(flowData.nodes || []);
+        
         await loadProducts();
       } catch (error) {
         console.error('Error loading data:', error);

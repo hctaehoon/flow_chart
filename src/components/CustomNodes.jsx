@@ -10,6 +10,9 @@ import AfviProcessModal from './AfviProcessModal';
 import { AFVI_SUB_PROCESSES } from '../constants/afviProcess';
 import { getNodeColor } from '../utils/colorUtils';
 
+// API 기본 URL 설정
+const API_BASE_URL = 'http://43.203.179.67:3001';
+
 // 공정별 색상 정의
 const processColors = {
   '입고': '#FF6B6B',      // 빨간색 계열
@@ -21,55 +24,16 @@ const processColors = {
 };
 
 export function ProcessNode({ data, products = [] }) {
-  // AFVI 세부 공정 노드의 상태 확인
-  const getNodeStatus = () => {
-    if (!data.label.includes('_BGA') && !data.label.includes('IVS') && !data.label.includes('Sorter')) {
-      return null;
-    }
-
-    // 현재 작업 중인 제품 찾기
-    const workingProduct = products.find(p => 
-      p.afviStatus?.currentMachine === data.label && 
-      p.status === 'registered' &&
-      p.afviStatus?.currentSubProcess
-    );
-
-    return workingProduct ? 'WORKING' : 'IDLE';
-  };
-
-  const nodeStatus = getNodeStatus();
-  const backgroundColor = nodeStatus 
-    ? MACHINE_STATUS_COLORS[nodeStatus]
-    : (processColors[data.label] || '#fff');
-
-  const borderColor = processColors[data.label] 
-    ? processColors[data.label].replace(')', ', 0.5)').replace('rgb', 'rgba') 
-    : '#777';
+  // 현재 노드가 사용 중인지 확인
+  const isInUse = products?.some(product => 
+    product.afviStatus?.currentMachine === data.label
+  );
 
   return (
-    <div
-      style={{
-        padding: '10px',
-        border: `2px solid ${borderColor}`,
-        borderRadius: '5px',
-        background: backgroundColor,
-        minWidth: '150px',
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: nodeStatus === 'WORKING' ? '#fff' : (processColors[data.label] ? '#fff' : '#000'),
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        pointerEvents: 'none'
-      }}
-    >
-      <Handle type="target" position={Position.Top} />
-      <div>
-        <strong style={{ display: 'block' }}>{data.label}</strong>
-        {data.details && <p style={{ margin: '5px 0' }}>{data.details}</p>}
-      </div>
-      <Handle type="source" position={Position.Bottom} />
+    <div style={{
+      background: isInUse ? MACHINE_STATUS_COLORS.WORKING : MACHINE_STATUS_COLORS.IDLE
+    }}>
+      {data.label}
     </div>
   );
 }
@@ -104,7 +68,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
       const newPosition = calculateNodePosition(nextProcess);
 
       try {
-        const response = await fetch(`http://localhost:3001/api/products/${data.id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/products/${data.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -145,7 +109,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
     try {
       // 현재 출하 대기 상태라면 출하 처리
       if (data.currentPosition === '출하 대기') {
-        const response = await fetch(`http://localhost:3001/api/products/${data.id}/ship`, {
+        const response = await fetch(`${API_BASE_URL}/api/products/${data.id}/ship`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -169,7 +133,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
       if (currentIndex === currentRoute.length - 1) {
         const newPosition = calculateNodePosition('출하 대기');
         
-        const response = await fetch(`http://localhost:3001/api/products/${data.id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/products/${data.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -193,7 +157,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
         const nextProcess = currentRoute[currentIndex + 1];
         const newPosition = calculateNodePosition(nextProcess);
         
-        const response = await fetch(`http://localhost:3001/api/products/${data.id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/products/${data.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -229,7 +193,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
       // 선택된 공정의 새로운 위치 계산
       const newPosition = calculateNodePosition(formData.currentPosition);
 
-      const response = await fetch(`http://localhost:3001/api/products/${data.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/${data.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -255,7 +219,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
 
   const handleAfviSave = async (afviData) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${data.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/${data.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

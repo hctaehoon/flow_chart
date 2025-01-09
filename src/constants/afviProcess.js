@@ -1,11 +1,9 @@
 export const AFVI_SUB_PROCESSES = {
   '3D_BGA': {
-    name: '3D_BGA',
     machines: ['3D_BGA_1', '3D_BGA_2'],
     nextProcess: '2D_BGA'
   },
   '2D_BGA': {
-    name: '2D_BGA',
     machines: ['2D_BGA_1', '2D_BGA_2'],
     nextProcess: 'IVS'
   },
@@ -14,6 +12,8 @@ export const AFVI_SUB_PROCESSES = {
     machines: ['IVS'],  // 두 노드지만 하나의 프로세스로 관리
     nextProcess: 'Sorter'
   },
+
+  
   'Sorter': {
     name: 'Sorter',
     machines: ['Sorter_1', 'Sorter_2'],

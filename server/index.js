@@ -3,7 +3,6 @@ import cors from 'cors';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
 import { 
   calculateNodePosition, 
   decrementProcessCounter, 
@@ -12,24 +11,16 @@ import {
   resetProcessCounter 
 } from './utils/nodeUtils.js';
 
-// 환경변수 설정
-dotenv.config();
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 
 // CORS 설정 수정
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL] // 프로덕션 환경의 프론트엔드 URL
-    : 'http://localhost:5173',   // 개발 환경
+  origin: ['http://43.203.179.67:5173', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials: true
 }));
-
-// 정적 파일 제공
-app.use(express.static(path.join(__dirname, 'public')));
 
 // body-parser 미들웨어 설정
 app.use(express.json());
@@ -434,10 +425,12 @@ const initializeServer = async () => {
   try {
     await Promise.all([initDB(), initProductsDB()]);
     
-    app.listen(PORT, '0.0.0.0', () => {
+    app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV}`);
-      console.log(`Frontend URL: ${process.env.FRONTEND_URL}`);
+      console.log('API endpoints:');
+      console.log('GET     /api/products');
+      console.log('POST    /api/products');
+      console.log('PATCH   /api/products/:id/holding');
     });
   } catch (error) {
     console.error('Server initialization failed:', error);

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { getModelColor } from '../utils/colorUtils';
 import HoldingMemoModal from './HoldingMemoModal';
 
+const API_BASE_URL = 'http://43.203.179.67:3001';
+
 function formatDuration(ms) {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -128,7 +130,7 @@ function ShippingPanel() {
         holdingMemo
       });
 
-      const response = await fetch(`http://localhost:3001/api/products/${productId}/holding`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/${productId}/holding`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
