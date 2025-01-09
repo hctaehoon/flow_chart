@@ -1,13 +1,10 @@
 import React, { useState, useCallback, useEffect, useMemo, memo } from 'react';
-import { 
-  ReactFlow,
+import ReactFlow, {
   Controls,
   Background,
-  applyNodeChanges,
-  applyEdgeChanges,
   addEdge,
   useNodesState,
-  useEdgesState
+  useEdgesState,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ProcessNode, ProductNode } from './components/CustomNodes';
@@ -36,23 +33,69 @@ const defaultEdgeOptions = {
 function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedNode, setSelectedNode] = useState(null);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const onConnect = useCallback((params) => {
-    // 엣지 연결 시 소스와 타겟 핸들 ID 자동 설정
-    const sourceId = params.source;
-    const targetId = params.target;
-    const edgeId = `edge-${sourceId}-${targetId}`;
+  // 초기 데이터 로딩
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [flowResponse, productsResponse] = await Promise.all([
+          fetch(`${API_URL}/api/flow`),
+          fetch(`${API_URL}/api/products`)
+        ]);
+        
+        const flowData = await flowResponse.json();
+        const productsData = await productsResponse.json();
+        
+        // 엣지 데이터 정규화
+        const normalizedEdges = flowData.edges.map(edge => ({
+          ...edge,
+          id: edge.id.startsWith('edge-') ? edge.id : `edge-${edge.source}-${edge.target}`,
+          sourceHandle: `${edge.source}-source`,
+          targetHandle: `${edge.target}-target`,
+          type: 'smoothstep',
+          animated: true
+        }));
+
+        setNodes(flowData.nodes);
+        setEdges(normalizedEdges);
+        setProducts(productsData.products);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError(error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // 노드 생성 위치 계산 로직 복원
+  const calculateNodePosition = useCallback((processName) => {
+    const existingNodes = nodes.filter(node => 
+      node.data.currentPosition === processName
+    );
     
+    const basePosition = PROCESS_POSITIONS[processName] || { x: 0, y: 0 };
+    const offset = existingNodes.length * 50;
+    
+    return {
+      x: basePosition.x,
+      y: basePosition.y + offset
+    };
+  }, [nodes]);
+
+  const onConnect = useCallback((params) => {
+    const edgeId = `edge-${params.source}-${params.target}`;
     const newEdge = {
       ...params,
       id: edgeId,
+      sourceHandle: `${params.source}-source`,
+      targetHandle: `${params.target}-target`,
       type: 'smoothstep',
-      sourceHandle: `${sourceId}-source`,
-      targetHandle: `${targetId}-target`,
       animated: true
     };
     

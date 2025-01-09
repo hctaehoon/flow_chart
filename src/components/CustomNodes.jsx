@@ -12,16 +12,17 @@ import { AFVI_SUB_PROCESSES } from '../constants/afviProcess';
 // API_BASE_URL을 환경 변수로 변경
 const API_URL = import.meta.env.VITE_API_URL;
 
-export function ProcessNode({ data, products = [] }) {
+export const ProcessNode = memo(({ data, id, products = [] }) => {
+  // 설비 사용 중 여부 확인
   const isInUse = products?.some(product => 
     product.currentPosition === 'AFVI' && 
     product.afviStatus?.currentMachine === data.label && 
     !product.afviStatus?.history?.some(h => h.machine === data.label)
   );
 
-  // handleIds 생성
-  const sourceHandleId = `${data.id}-source`;
-  const targetHandleId = `${data.id}-target`;
+  // handleIds를 id prop에서 직접 생성
+  const sourceHandleId = `${id}-source`;
+  const targetHandleId = `${id}-target`;
 
   return (
     <div style={{
@@ -38,7 +39,7 @@ export function ProcessNode({ data, products = [] }) {
         type="target"
         position={Position.Top}
         style={{ background: '#555' }}
-        isValidConnection={(connection) => true}
+        isConnectable={true}
       />
       {data.label}
       <Handle
@@ -46,11 +47,11 @@ export function ProcessNode({ data, products = [] }) {
         type="source"
         position={Position.Bottom}
         style={{ background: '#555' }}
-        isValidConnection={(connection) => true}
+        isConnectable={true}
       />
     </div>
   );
-}
+});
 
 export const ProductNode = memo(({ data, isConnectable }) => {
   const [showEditModal, setShowEditModal] = useState(false);

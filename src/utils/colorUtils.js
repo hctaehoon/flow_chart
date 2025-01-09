@@ -11,6 +11,11 @@ export const processColors = {
   'AFVI': '#FF8B94'       // 분홍색 계열
 };
 
+export const MACHINE_STATUS_COLORS = {
+  IDLE: '#FFA726',    // 주황색 (대기 중)
+  WORKING: '#4CAF50'  // 초록색 (작업 중)
+};
+
 // 더 선명한 색상 팔레트
 const colorPalette = [
   '#FF6B6B', // 밝은 빨강
