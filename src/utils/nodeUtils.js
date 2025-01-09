@@ -371,11 +371,11 @@ const updateMachineStatus = async (nodes) => {
   }
 };
 
-const API_BASE_URL = 'http://43.203.179.67:3001';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const updateProductPosition = async (productId, newPosition, position) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/products/${productId}`, {
+    const response = await fetch(`${API_URL}/api/products/${productId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -418,7 +418,7 @@ export const updateProductPosition = async (productId, newPosition, position) =>
 
 export const updateAFVIStatus = async (productId, afviStatus) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/products/${productId}`, {
+    const response = await fetch(`${API_URL}/products/${productId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
