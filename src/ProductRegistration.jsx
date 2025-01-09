@@ -1,7 +1,9 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
+    const response = await fetch(`${API_URL}/api/products`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
