@@ -121,7 +121,7 @@ function App() {
 
   const loadProducts = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/products`);
+      const response = await fetch(`${API_URL}/api/products`);
       if (!response.ok) {
         throw new Error('Failed to load products');
       }
@@ -178,7 +178,7 @@ function App() {
     const loadInitialData = async () => {
       try {
         setIsLoading(true);
-        const flowResponse = await fetch(`${API_URL}/flow`);
+        const flowResponse = await fetch(`${API_URL}/api/flow`);
         if (!flowResponse.ok) {
           throw new Error('Failed to load flow data');
         }

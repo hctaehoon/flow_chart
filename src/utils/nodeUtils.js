@@ -418,7 +418,7 @@ export const updateProductPosition = async (productId, newPosition, position) =>
 
 export const updateAFVIStatus = async (productId, afviStatus) => {
   try {
-    const response = await fetch(`${API_URL}/products/${productId}`, {
+    const response = await fetch(`${API_URL}/api/products/${productId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -429,7 +429,7 @@ export const updateAFVIStatus = async (productId, afviStatus) => {
     if (!response.ok) throw new Error('Failed to update AFVI status');
 
     // 노드 재정렬 및 설비 상태 업데이트
-    const flowResponse = await fetch('http://localhost:3001/api/flow');
+    const flowResponse = await fetch(`${API_URL}/api/flow`);
     if (!flowResponse.ok) throw new Error('Failed to get flow data');
     const flowData = await flowResponse.json();
 
@@ -449,7 +449,7 @@ export const updateAFVIStatus = async (productId, afviStatus) => {
 // 노드 데이터 업데이트 함수 추가
 const updateNodeData = async (nodeId, newData) => {
   try {
-    const response = await fetch(`http://localhost:3001/api/nodes/${nodeId}`, {
+    const response = await fetch(`${API_URL}/api/nodes/${nodeId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
