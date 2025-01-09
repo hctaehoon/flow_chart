@@ -82,7 +82,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
       const newPosition = calculateNodePosition(nextProcess);
 
       try {
-        const response = await fetch(`${API_URL}/api/products/${data.id}`, {
+        const response = await fetch(`/api/products/${data.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
     try {
       // 현재 출하 대기 상태라면 출하 처리
       if (data.currentPosition === '출하 대기') {
-        const response = await fetch(`${API_URL}/api/products/${data.id}/ship`, {
+        const response = await fetch(`/api/products/${data.id}/ship`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -147,7 +147,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
       if (currentIndex === currentRoute.length - 1) {
         const newPosition = calculateNodePosition('출하 대기');
         
-        const response = await fetch(`${API_URL}/api/products/${data.id}`, {
+        const response = await fetch(`/api/products/${data.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
         const nextProcess = currentRoute[currentIndex + 1];
         const newPosition = calculateNodePosition(nextProcess);
         
-        const response = await fetch(`${API_URL}/api/products/${data.id}`, {
+        const response = await fetch(`/api/products/${data.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
       // 선택된 공정의 새로운 위치 계산
       const newPosition = calculateNodePosition(formData.currentPosition);
 
-      const response = await fetch(`${API_URL}/api/products/${data.id}`, {
+      const response = await fetch(`/api/products/${data.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ export const ProductNode = memo(({ data, isConnectable }) => {
 
   const handleAfviSave = async (afviData) => {
     try {
-      const response = await fetch(`${API_URL}/api/products/${data.id}`, {
+      const response = await fetch(`/api/products/${data.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
