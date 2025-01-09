@@ -423,6 +423,7 @@ export const updateAFVIStatus = async (productId, afviStatus) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ afviStatus })
     });
 
