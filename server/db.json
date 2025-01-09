@@ -474,8 +474,7 @@
       "sourceHandle": "process-1735806920458-source",
       "target": "process-1735806952146",
       "targetHandle": "process-1735806952146-target",
-      "type": "smoothstep",
-      "style": { "stroke": "#666", "strokeWidth": 2 }
+      "type": "smoothstep"
     },
     {
       "source": "process-1735806362960",

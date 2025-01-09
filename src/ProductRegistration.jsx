@@ -1,9 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL;
-
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await fetch(`${API_URL}/api/products`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -12,10 +10,7 @@ const handleSubmit = async (e) => {
       credentials: 'include'
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to register product');
-    }
+    if (!response.ok) throw new Error('Failed to register product');
     
     const result = await response.json();
     console.log('Product registered:', result);
