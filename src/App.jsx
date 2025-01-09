@@ -5,7 +5,9 @@ import {
   Background,
   applyNodeChanges,
   applyEdgeChanges,
-  addEdge
+  addEdge,
+  useNodesState,
+  useEdgesState
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ProcessNode, ProductNode } from './components/CustomNodes';
@@ -24,47 +26,37 @@ const nodeTypes = {
   product: ProductNodeMemo
 };
 
+// 기본 엣지 스타일 설정
+const defaultEdgeOptions = {
+  type: 'smoothstep',
+  animated: true,
+  style: { stroke: '#666', strokeWidth: 2 }
+};
+
 function App() {
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 노드 변경 처리
-  const onNodesChange = useCallback((changes) => {
-    setNodes((nds) => applyNodeChanges(changes, nds));
-  }, []);
-
-  const onEdgesChange = useCallback(
-    (changes) => {
-      const updatedEdges = applyEdgeChanges(changes, edges);
-      setEdges(updatedEdges);
-
-      fetch(`${API_URL}/edges`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedEdges),
-      }).catch(console.error);
-    },
-    [edges]
-  );
-
   const onConnect = useCallback((params) => {
-    // sourceHandle과 targetHandle이 있는지 확인
-    if (!params.sourceHandle || !params.targetHandle) {
-      console.warn('Missing handle IDs:', params);
-      return;
-    }
+    // 엣지 연결 시 소스와 타겟 핸들 ID 자동 설정
+    const sourceId = params.source;
+    const targetId = params.target;
+    const edgeId = `edge-${sourceId}-${targetId}`;
     
-    setEdges((eds) => addEdge({
+    const newEdge = {
       ...params,
+      id: edgeId,
       type: 'smoothstep',
+      sourceHandle: `${sourceId}-source`,
+      targetHandle: `${targetId}-target`,
       animated: true
-    }, eds));
+    };
+    
+    setEdges((eds) => addEdge(newEdge, eds));
   }, []);
 
   const onNodeClick = useCallback((event, node) => {
@@ -261,10 +253,7 @@ function App() {
         elementsSelectable={true}
         panOnDrag={true}
         zoomOnScroll={true}
-        defaultEdgeOptions={{
-          type: 'smoothstep',
-          animated: true
-        }}
+        defaultEdgeOptions={defaultEdgeOptions}
       >
         <Background />
         <Controls showInteractive={false} />

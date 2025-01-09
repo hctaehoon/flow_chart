@@ -469,12 +469,13 @@
   ],
   "edges": [
     {
-      "id": "xy-edge__process-1735806920458-process-1735806952146",
+      "id": "edge-process-1735806920458-process-1735806952146",
       "source": "process-1735806920458",
       "sourceHandle": "process-1735806920458-source",
       "target": "process-1735806952146",
       "targetHandle": "process-1735806952146-target",
-      "type": "smoothstep"
+      "type": "smoothstep",
+      "animated": true
     },
     {
       "id": "xy-edge__process-1735806362960-process-1735807053577",
