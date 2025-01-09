@@ -24,16 +24,33 @@ const processColors = {
 };
 
 export function ProcessNode({ data, products = [] }) {
-  // 현재 노드가 사용 중인지 확인
   const isInUse = products?.some(product => 
     product.afviStatus?.currentMachine === data.label
   );
 
   return (
     <div style={{
-      background: isInUse ? MACHINE_STATUS_COLORS.WORKING : MACHINE_STATUS_COLORS.IDLE
+      padding: '10px',
+      border: '2px solid #ccc',
+      borderRadius: '5px',
+      background: isInUse ? MACHINE_STATUS_COLORS.WORKING : MACHINE_STATUS_COLORS.IDLE,
+      minWidth: '150px',
+      textAlign: 'center',
+      position: 'relative'
     }}>
+      <Handle
+        id={`${data.id}-target`}
+        type="target"
+        position={Position.Top}
+        style={{ background: '#555' }}
+      />
       {data.label}
+      <Handle
+        id={`${data.id}-source`}
+        type="source"
+        position={Position.Bottom}
+        style={{ background: '#555' }}
+      />
     </div>
   );
 }

@@ -16,6 +16,11 @@ import { resetProcessCounter, incrementProcessCounter, initializeYPositions } fr
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const nodeTypes = {
+  process: ProcessNode,
+  product: ProductNode
+};
+
 function App() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
@@ -255,12 +260,12 @@ function App() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeClick={onNodeClick}
         onNodeDoubleClick={onNodeDoubleClick}
-        nodeTypes={nodeTypes}
         fitView
         nodesDraggable={false}
         nodesConnectable={false}
