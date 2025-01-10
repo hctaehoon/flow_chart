@@ -297,7 +297,7 @@ const updateNodePositions = async (updates) => {
 
   try {
     // db.json 업데이트
-    await fetch('http://localhost:3001/api/nodes/batch-update', {
+    await fetch('http://43.203.179.67:3001/api/nodes/batch-update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates)
@@ -305,7 +305,7 @@ const updateNodePositions = async (updates) => {
 
     // products.json 업데이트
     for (const update of updates) {
-      await fetch(`http://localhost:3001/api/products/${update.id}`, {
+      await fetch(`http://43.203.179.67:3001/api/products/${update.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ position: update.position })
@@ -352,7 +352,7 @@ const updateMachineStatus = async (nodes) => {
 
     // 설비 상태 일괄 업데이트
     for (const update of updates) {
-      await fetch(`http://localhost:3001/api/nodes/${update.id}`, {
+      await fetch(`http://43.203.179.67:3001/api/nodes/${update.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -362,7 +362,7 @@ const updateMachineStatus = async (nodes) => {
     }
 
     // 업데이트된 flow 데이터 반환
-    const flowResponse = await fetch('http://localhost:3001/api/flow');
+    const flowResponse = await fetch('http://43.203.179.67:3001/api/flow');
     if (!flowResponse.ok) throw new Error('Failed to get flow data');
     return await flowResponse.json();
   } catch (error) {
@@ -371,54 +371,11 @@ const updateMachineStatus = async (nodes) => {
   }
 };
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-export const updateProductPosition = async (productId, newPosition, position) => {
-  try {
-    const response = await fetch(`${API_URL}/api/products/${productId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        currentPosition: newPosition,
-        position: position
-      }),
-    });
-    
-    if (!response.ok) throw new Error('Failed to update product position');
-    const updatedProduct = await response.json();
-
-    // AFVI 공정에 진입하는 경우
-    if (newPosition === 'AFVI') {
-      // 새로운 Y 위치 할당
-      let newY = PROCESS_POSITIONS['AFVI'].y + 300;
-      while (Array.from(AFVINodePositions.positions.values()).includes(newY)) {
-        newY += 250;
-      }
-      AFVINodePositions.setInitialPosition(productId, newY);
-    }
-    // AFVI 공정을 떠나는 경우
-    else if (updatedProduct.currentPosition === 'AFVI') {
-      AFVINodePositions.removeNode(productId);
-    }
-
-    const flowResponse = await fetch('http://localhost:3001/api/flow');
-    if (!flowResponse.ok) throw new Error('Failed to get flow data');
-    const flowData = await flowResponse.json();
-
-    await reorderProcessNodes(newPosition, flowData.nodes);
-    
-    return updatedProduct;
-  } catch (error) {
-    console.error('Error updating product position:', error);
-    throw error;
-  }
-};
-
+// AFVI 상태 업데이트 함수 수정
 export const updateAFVIStatus = async (productId, afviStatus) => {
   try {
-    const response = await fetch(`${API_URL}/api/products/${productId}`, {
+    // 상태 업데이트
+    const response = await fetch(`http://43.203.179.67:3001/api/products/${productId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -429,7 +386,7 @@ export const updateAFVIStatus = async (productId, afviStatus) => {
     if (!response.ok) throw new Error('Failed to update AFVI status');
 
     // 노드 재정렬 및 설비 상태 업데이트
-    const flowResponse = await fetch(`${API_URL}/api/flow`);
+    const flowResponse = await fetch('http://43.203.179.67:3001/api/flow');
     if (!flowResponse.ok) throw new Error('Failed to get flow data');
     const flowData = await flowResponse.json();
 
@@ -449,7 +406,7 @@ export const updateAFVIStatus = async (productId, afviStatus) => {
 // 노드 데이터 업데이트 함수 추가
 const updateNodeData = async (nodeId, newData) => {
   try {
-    const response = await fetch(`${API_URL}/api/nodes/${nodeId}`, {
+    const response = await fetch(`http://43.203.179.67:3001/api/nodes/${nodeId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -471,7 +428,7 @@ const updateNodeData = async (nodeId, newData) => {
 // 기존 기능 유지
 export const moveToShippingList = async (productId) => {
   try {
-    const response = await fetch(`http://localhost:3001/api/products/${productId}/ship`, {
+    const response = await fetch(`http://43.203.179.67:3001/api/products/${productId}/ship`, {
       method: 'POST',
     });
     
@@ -480,6 +437,50 @@ export const moveToShippingList = async (productId) => {
     return await response.json();
   } catch (error) {
     console.error('Error moving product to shipping list:', error);
+    throw error;
+  }
+};
+
+// 제품 위치 업데이트 함수 수정
+export const updateProductPosition = async (productId, newProcess, newPosition) => {
+  try {
+    const response = await fetch(`http://43.203.179.67:3001/api/products/${productId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        currentPosition: newProcess,
+        position: newPosition
+      }),
+    });
+    
+    if (!response.ok) throw new Error('Failed to update product position');
+    const updatedProduct = await response.json();
+
+    // AFVI 공정에 진입하는 경우
+    if (newProcess === 'AFVI') {
+      // 새로운 Y 위치 할당
+      let newY = PROCESS_POSITIONS['AFVI'].y + 300;
+      while (Array.from(AFVINodePositions.positions.values()).includes(newY)) {
+        newY += 250;
+      }
+      AFVINodePositions.setInitialPosition(productId, newY);
+    }
+    // AFVI 공정을 떠나는 경우
+    else if (updatedProduct.currentPosition === 'AFVI') {
+      AFVINodePositions.removeNode(productId);
+    }
+
+    const flowResponse = await fetch('http://43.203.179.67:3001/api/flow');
+    if (!flowResponse.ok) throw new Error('Failed to get flow data');
+    const flowData = await flowResponse.json();
+
+    await reorderProcessNodes(newProcess, flowData.nodes);
+    
+    return updatedProduct;
+  } catch (error) {
+    console.error('Error updating product position:', error);
     throw error;
   }
 }; 

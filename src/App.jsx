@@ -1,10 +1,11 @@
-import React, { useState, useCallback, useEffect, useMemo, memo } from 'react';
-import ReactFlow, {
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { 
+  ReactFlow,
   Controls,
   Background,
-  addEdge,
-  useNodesState,
-  useEdgesState,
+  applyNodeChanges,
+  applyEdgeChanges,
+  addEdge
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ProcessNode, ProductNode } from './components/CustomNodes';
@@ -13,94 +14,80 @@ import ShippingPanel from './components/ShippingPanel';
 import { PROCESS_POSITIONS } from './constants/processPositions';
 import { resetProcessCounter, incrementProcessCounter, initializeYPositions } from './utils/nodeUtils';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'http://43.203.179.67:3001/api';
 
-const ProcessNodeMemo = memo(ProcessNode);
-const ProductNodeMemo = memo(ProductNode);
+// ProcessNode를 메모이제이션된 컴포넌트로 만듦
+const MemoizedProcessNode = React.memo(({ products, ...props }) => (
+  <ProcessNode {...props} products={products} />
+));
 
-const nodeTypes = {
-  process: ProcessNodeMemo,
-  product: ProductNodeMemo
-};
-
-// 기본 엣지 스타일 설정
-const defaultEdgeOptions = {
-  type: 'smoothstep',
-  animated: true,
-  style: { stroke: '#666', strokeWidth: 2 }
+// 기본 nodeTypes 정의
+const baseNodeTypes = {
+  product: ProductNode
 };
 
 function App() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
+  const [selectedNode, setSelectedNode] = useState(null);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 초기 데이터 로딩
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [flowResponse, productsResponse] = await Promise.all([
-          fetch(`${API_URL}/api/flow`),
-          fetch(`${API_URL}/api/products`)
-        ]);
-        
-        const flowData = await flowResponse.json();
-        const productsData = await productsResponse.json();
-        
-        // 엣지 데이터 정규화
-        const normalizedEdges = flowData.edges.map(edge => ({
-          ...edge,
-          id: edge.id.startsWith('edge-') ? edge.id : `edge-${edge.source}-${edge.target}`,
-          sourceHandle: `${edge.source}-source`,
-          targetHandle: `${edge.target}-target`,
-          type: 'smoothstep',
-          animated: true
-        }));
+  // nodeTypes를 products 의존성과 함께 메모이제이션
+  const nodeTypes = useMemo(() => ({
+    ...baseNodeTypes,
+    process: (props) => <MemoizedProcessNode {...props} products={products} />
+  }), [products]);
 
-        setNodes(flowData.nodes);
-        setEdges(normalizedEdges);
-        setProducts(productsData.products);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError(error);
-        setIsLoading(false);
-      }
-    };
+  // 2. 모든 callback hooks
+  const onNodesChange = useCallback(
+    (changes) => {
+      const updatedNodes = applyNodeChanges(changes, nodes);
+      setNodes(updatedNodes);
+      
+      fetchData(`${API_URL}/nodes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedNodes),
+      });
+    },
+    [nodes]
+  );
 
-    fetchData();
-  }, []);
+  const onEdgesChange = useCallback(
+    (changes) => {
+      const updatedEdges = applyEdgeChanges(changes, edges);
+      setEdges(updatedEdges);
 
-  // 노드 생성 위치 계산 로직 복원
-  const calculateNodePosition = useCallback((processName) => {
-    const existingNodes = nodes.filter(node => 
-      node.data.currentPosition === processName
-    );
-    
-    const basePosition = PROCESS_POSITIONS[processName] || { x: 0, y: 0 };
-    const offset = existingNodes.length * 50;
-    
-    return {
-      x: basePosition.x,
-      y: basePosition.y + offset
-    };
-  }, [nodes]);
+      fetchData(`${API_URL}/edges`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedEdges),
+      });
+    },
+    [edges]
+  );
 
-  const onConnect = useCallback((params) => {
-    const edgeId = `edge-${params.source}-${params.target}`;
-    const newEdge = {
-      ...params,
-      id: edgeId,
-      sourceHandle: `${params.source}-source`,
-      targetHandle: `${params.target}-target`,
-      type: 'smoothstep',
-      animated: true
-    };
-    
-    setEdges((eds) => addEdge(newEdge, eds));
-  }, []);
+  const onConnect = useCallback(
+    (params) => {
+      const updatedEdges = addEdge(params, edges);
+      setEdges(updatedEdges);
+
+      fetchData(`${API_URL}/edges`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedEdges),
+      });
+    },
+    [edges]
+  );
 
   const onNodeClick = useCallback((event, node) => {
     setSelectedNode(node);
@@ -109,13 +96,13 @@ function App() {
   const deleteNode = useCallback((nodeId) => {
     setNodes((nds) => {
       const updatedNodes = nds.filter((node) => node.id !== nodeId);
-      fetch(`${API_URL}/nodes`, {
+      fetchData(`${API_URL}/nodes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedNodes),
-      }).catch(console.error);
+      });
       return updatedNodes;
     });
 
@@ -123,13 +110,13 @@ function App() {
       const updatedEdges = eds.filter(
         (edge) => edge.source !== nodeId && edge.target !== nodeId
       );
-      fetch(`${API_URL}/edges`, {
+      fetchData(`${API_URL}/edges`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedEdges),
-      }).catch(console.error);
+      });
       return updatedEdges;
     });
   }, []);
@@ -150,7 +137,7 @@ function App() {
 
   const loadProducts = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products`);
+      const response = await fetch(`${API_URL}/products`);
       if (!response.ok) {
         throw new Error('Failed to load products');
       }
@@ -207,7 +194,7 @@ function App() {
     const loadInitialData = async () => {
       try {
         setIsLoading(true);
-        const flowResponse = await fetch(`${API_URL}/api/flow`);
+        const flowResponse = await fetch(`${API_URL}/flow`);
         if (!flowResponse.ok) {
           throw new Error('Failed to load flow data');
         }
@@ -284,19 +271,18 @@ function App() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onNodeClick={onNodeClick}
         onNodeDoubleClick={onNodeDoubleClick}
+        nodeTypes={nodeTypes}
         fitView
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable={true}
         panOnDrag={true}
         zoomOnScroll={true}
-        defaultEdgeOptions={defaultEdgeOptions}
       >
         <Background />
         <Controls showInteractive={false} />

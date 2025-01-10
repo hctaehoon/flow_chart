@@ -5,17 +5,14 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '0.0.0.0',  // 모든 IP에서 접근 가능하도록 설정
+    host: '0.0.0.0',  // 모든 네트워크 인터페이스에서 수신
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://43.203.179.67:3001',
+        target: process.env.VITE_API_URL || 'http://localhost:3001',
         changeOrigin: true,
-        secure: false
-      }
-    }
+        secure: false,
+      },
+    },
   },
-  define: {
-    'process.env': {}
-  }
 })

@@ -2,9 +2,6 @@ import { useState } from 'react';
 import { ROUTE_OPTIONS } from '../constants/routes';
 import { calculateNodePosition, updateProductPosition } from '../utils/nodeUtils';
 
-// API URL을 환경변수에서 가져오기
-const API_URL = import.meta.env.VITE_API_URL;
-
 function ProductRegistration({ onProductRegistered }) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -16,21 +13,37 @@ function ProductRegistration({ onProductRegistered }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const position = calculateNodePosition('입고');
+    
     try {
-      const response = await fetch(`${API_URL}/api/products`, {
+      const response = await fetch('http://43.203.179.67:3001/api/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          position,
+          currentPosition: '입고',
+          afviStatus: {
+            currentSubProcess: null,
+            currentMachine: null,
+            startTime: null,
+            history: []
+          },
+          isHolding: false,
+          holdingMemo: null,
+          registeredAt: new Date().toISOString(),
+          status: 'registered'
+        }),
       });
 
       if (!response.ok) throw new Error('Failed to register product');
+      const newProduct = await response.json();
       
-      const result = await response.json();
-      console.log('Product registered:', result);
-      
-      onProductRegistered();
+      // 제품 등록 후 자동으로 입고 공정으로 위치 재조정
+      const adjustedPosition = calculateNodePosition('입고');
+      await updateProductPosition(newProduct.id, '입고', adjustedPosition);
       
       setFormData({
         modelName: '',
@@ -39,9 +52,7 @@ function ProductRegistration({ onProductRegistered }) {
         route: 'ROUTE1'
       });
       
-      setIsOpen(false);
-      
-      window.location.reload();
+      onProductRegistered();
     } catch (error) {
       console.error('Error registering product:', error);
       alert('제품 등록에 실패했습니다.');

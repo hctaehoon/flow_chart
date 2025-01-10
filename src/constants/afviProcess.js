@@ -1,9 +1,11 @@
 export const AFVI_SUB_PROCESSES = {
   '3D_BGA': {
+    name: '3D_BGA',
     machines: ['3D_BGA_1', '3D_BGA_2'],
     nextProcess: '2D_BGA'
   },
   '2D_BGA': {
+    name: '2D_BGA',
     machines: ['2D_BGA_1', '2D_BGA_2'],
     nextProcess: 'IVS'
   },

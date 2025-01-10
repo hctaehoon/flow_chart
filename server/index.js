@@ -13,15 +13,25 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // CORS 설정 수정
 app.use(cors({
-  origin: ['http://43.203.179.67:5173', 'http://localhost:5173'],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['http://43.203.179.67:5173', 'http://43.203.179.67'] 
+    : 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  credentials: false,
-  allowedHeaders: ['Content-Type']
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
+
+// 보안 헤더 추가
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 // body-parser 미들웨어 설정
 app.use(express.json());
@@ -426,7 +436,7 @@ const initializeServer = async () => {
   try {
     await Promise.all([initDB(), initProductsDB()]);
     
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server is running on port ${PORT}`);
       console.log('API endpoints:');
       console.log('GET     /api/products');

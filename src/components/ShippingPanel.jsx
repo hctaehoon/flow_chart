@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { getModelColor } from '../utils/colorUtils';
 import HoldingMemoModal from './HoldingMemoModal';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 function formatDuration(ms) {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -29,7 +27,7 @@ function ShippingPanel() {
   // 제품 데이터 로드 함수
   const loadProducts = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products`);
+      const response = await fetch('http://43.203.179.67:3001/api/products');
       if (!response.ok) {
         throw new Error('Failed to load products');
       }
@@ -130,7 +128,7 @@ function ShippingPanel() {
         holdingMemo
       });
 
-      const response = await fetch(`${API_URL}/api/products/${productId}/holding`, {
+      const response = await fetch(`http://43.203.179.67:3001/api/products/${productId}/holding`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

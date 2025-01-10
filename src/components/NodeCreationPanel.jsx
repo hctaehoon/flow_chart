@@ -1,45 +1,38 @@
 import { useState } from 'react';
-import { AFVI_SUB_PROCESSES } from '../constants/afviProcess';
 
-// API URL을 환경변수에서 가져오기
-const API_URL = import.meta.env.VITE_API_URL;
-
-function NodeCreationPanel({ onClose }) {
+function NodeCreationPanel({ setNodes }) {
   const [nodeName, setNodeName] = useState('');
   const [nodeType, setNodeType] = useState('process');
-  const [subProcess, setSubProcess] = useState('3D_BGA');
+  const [quantity, setQuantity] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      // localhost 대신 환경변수 사용
-      const response = await fetch(`${API_URL}/api/nodes`, {
+  const createNode = () => {
+    const newNode = {
+      id: `${nodeType}-${Date.now()}`,
+      type: nodeType,
+      position: { x: Math.random() * 500, y: Math.random() * 500 },
+      data: { 
+        label: nodeName,
+        ...(nodeType === 'product' && { quantity })
+      }
+    };
+
+    setNodes((nodes) => {
+      const updatedNodes = [...nodes, newNode];
+      
+      // 서버에 변경사항 저장
+      fetch('http://43.203.179.67:3001/api/nodes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          type: nodeType,
-          data: {
-            label: nodeName,
-            subProcess: nodeType === 'process' ? subProcess : null
-          }
-        }),
-      });
+        body: JSON.stringify(updatedNodes),
+      }).catch(console.error);
 
-      if (!response.ok) {
-        throw new Error('Failed to create node');
-      }
-
-      const result = await response.json();
-      console.log('Node created:', result);
-      onClose();
-      window.location.reload();
-    } catch (error) {
-      console.error('Error creating node:', error);
-      alert('노드 생성에 실패했습니다.');
-    }
+      return updatedNodes;
+    });
+    
+    setNodeName('');
+    setQuantity('');
   };
 
   return (
@@ -74,7 +67,7 @@ function NodeCreationPanel({ onClose }) {
           style={{ marginRight: '5px' }}
         />
       )}
-      <button onClick={handleSubmit}>노드 생성</button>
+      <button onClick={createNode}>노드 생성</button>
     </div>
   );
 }

@@ -1,0 +1,175 @@
+{
+  "products": [
+    {
+      "modelName": "KINSUS",
+      "lotNo": "NO1",
+      "quantity": 50,
+      "route": "ROUTE1",
+      "position": {
+        "x": 1100,
+        "y": 382
+      },
+      "currentPosition": "출하 대기",
+      "afviStatus": {
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
+        "history": []
+      },
+      "isHolding": false,
+      "holdingMemo": null,
+      "registeredAt": "2025-01-10T00:18:09.254Z",
+      "status": "shipped",
+      "id": "product-1736468289254",
+      "shippedAt": "2025-01-10T00:22:24.643Z",
+      "totalTime": 255389
+    },
+    {
+      "modelName": "TEST",
+      "lotNo": "TEST_LOT",
+      "quantity": "0",
+      "route": "ROUTE2",
+      "position": {
+        "x": 1100,
+        "y": 132
+      },
+      "currentPosition": "출하 대기",
+      "afviStatus": {
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
+        "history": [
+          {
+            "subProcess": "3D_BGA",
+            "machine": "3D_BGA_2",
+            "startTime": "2025-01-10T00:18:52.856Z",
+            "endTime": "2025-01-10T00:18:55.316Z"
+          },
+          {
+            "subProcess": "2D_BGA",
+            "machine": "2D_BGA_1",
+            "startTime": "2025-01-10T00:18:55.316Z",
+            "endTime": "2025-01-10T00:18:57.687Z"
+          },
+          {
+            "subProcess": "IVS",
+            "machine": "IVS",
+            "startTime": "2025-01-10T00:18:57.687Z",
+            "endTime": "2025-01-10T00:19:00.216Z"
+          },
+          {
+            "subProcess": "Sorter",
+            "machine": "Sorter_1",
+            "startTime": "2025-01-10T00:19:00.216Z",
+            "endTime": "2025-01-10T00:19:01.117Z"
+          }
+        ]
+      },
+      "isHolding": false,
+      "holdingMemo": null,
+      "registeredAt": "2025-01-10T00:18:47.229Z",
+      "status": "shipped",
+      "id": "product-1736468327229",
+      "shippedAt": "2025-01-10T00:19:06.703Z",
+      "totalTime": 19474
+    },
+    {
+      "modelName": "KINSUS_TEST",
+      "lotNo": "TEST_LOT_2",
+      "quantity": "0",
+      "route": "ROUTE2",
+      "position": {
+        "x": 1100,
+        "y": 632
+      },
+      "currentPosition": "출하 대기",
+      "afviStatus": {
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
+        "history": [
+          {
+            "subProcess": "3D_BGA",
+            "machine": "3D_BGA_1",
+            "startTime": "2025-01-10T00:21:18.983Z",
+            "endTime": "2025-01-10T00:21:48.255Z"
+          },
+          {
+            "subProcess": "2D_BGA",
+            "machine": "2D_BGA_2",
+            "startTime": "2025-01-10T00:21:48.255Z",
+            "endTime": "2025-01-10T00:21:55.144Z"
+          },
+          {
+            "subProcess": "IVS",
+            "machine": "IVS",
+            "startTime": "2025-01-10T00:21:55.144Z",
+            "endTime": "2025-01-10T00:22:01.439Z"
+          },
+          {
+            "subProcess": "Sorter",
+            "machine": "Sorter_2",
+            "startTime": "2025-01-10T00:22:01.439Z",
+            "endTime": "2025-01-10T00:22:03.532Z"
+          }
+        ]
+      },
+      "isHolding": false,
+      "holdingMemo": null,
+      "registeredAt": "2025-01-10T00:21:12.677Z",
+      "status": "shipped",
+      "id": "product-1736468472677",
+      "shippedAt": "2025-01-10T00:22:25.829Z",
+      "totalTime": 73152
+    },
+    {
+      "modelName": "KINSUS_TEST",
+      "lotNo": "TEST_LOT_3",
+      "quantity": "0",
+      "route": "ROUTE2",
+      "position": {
+        "x": 1100,
+        "y": 132
+      },
+      "currentPosition": "출하 대기",
+      "afviStatus": {
+        "currentSubProcess": null,
+        "currentMachine": null,
+        "startTime": null,
+        "history": [
+          {
+            "subProcess": "3D_BGA",
+            "machine": "3D_BGA_2",
+            "startTime": "2025-01-10T00:21:39.799Z",
+            "endTime": "2025-01-10T00:21:44.994Z"
+          },
+          {
+            "subProcess": "2D_BGA",
+            "machine": "2D_BGA_1",
+            "startTime": "2025-01-10T00:21:44.994Z",
+            "endTime": "2025-01-10T00:21:52.163Z"
+          },
+          {
+            "subProcess": "IVS",
+            "machine": "IVS",
+            "startTime": "2025-01-10T00:21:52.163Z",
+            "endTime": "2025-01-10T00:21:58.543Z"
+          },
+          {
+            "subProcess": "Sorter",
+            "machine": "Sorter_1",
+            "startTime": "2025-01-10T00:21:58.543Z",
+            "endTime": "2025-01-10T00:22:02.581Z"
+          }
+        ]
+      },
+      "isHolding": false,
+      "holdingMemo": null,
+      "registeredAt": "2025-01-10T00:21:31.572Z",
+      "status": "shipped",
+      "id": "product-1736468491572",
+      "shippedAt": "2025-01-10T00:22:23.460Z",
+      "totalTime": 51888
+    }
+  ]
+}
