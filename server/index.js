@@ -25,7 +25,11 @@ app.use(cors({
 
 // 보안 헤더 수정
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://43.203.179.67:5173');
+  const allowedOrigins = ['http://43.203.179.67:5173', 'http://43.203.179.67'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();

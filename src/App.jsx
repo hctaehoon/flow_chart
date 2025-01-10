@@ -14,7 +14,7 @@ import ShippingPanel from './components/ShippingPanel';
 import { PROCESS_POSITIONS } from './constants/processPositions';
 import { resetProcessCounter, incrementProcessCounter, initializeYPositions } from './utils/nodeUtils';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://43.203.179.67:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 // ProcessNode를 메모이제이션된 컴포넌트로 만듦
 const MemoizedProcessNode = React.memo(({ products, ...props }) => (
