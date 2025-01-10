@@ -11,7 +11,7 @@ import { AFVI_SUB_PROCESSES } from '../constants/afviProcess';
 import { getNodeColor } from '../utils/colorUtils';
 
 // API URL을 환경변수에서 가져오기
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = 'http://43.203.179.67:3001/api';
 
 // 공정별 색상 정의
 const processColors = {

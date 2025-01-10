@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ROUTE_OPTIONS } from '../constants/routes';
 import { calculateNodePosition, updateProductPosition } from '../utils/nodeUtils';
 
+const API_URL = 'http://43.203.179.67:3001/api';
+
 function ProductRegistration({ onProductRegistered }) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -16,7 +18,7 @@ function ProductRegistration({ onProductRegistered }) {
     const position = calculateNodePosition('입고');
     
     try {
-      const response = await fetch('http://43.203.179.67:3001/api/products', {
+      const response = await fetch(`${API_URL}/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

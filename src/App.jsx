@@ -14,7 +14,8 @@ import ShippingPanel from './components/ShippingPanel';
 import { PROCESS_POSITIONS } from './constants/processPositions';
 import { resetProcessCounter, incrementProcessCounter, initializeYPositions } from './utils/nodeUtils';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// API URL을 환경변수에서 가져오기
+const API_URL = 'http://43.203.179.67:3001/api';  // 하드코딩으로 먼저 테스트
 
 // ProcessNode를 메모이제이션된 컴포넌트로 만듦
 const MemoizedProcessNode = React.memo(({ products, ...props }) => (
@@ -141,37 +142,8 @@ function App() {
       if (!response.ok) {
         throw new Error('Failed to load products');
       }
-      const productsData = await response.json();
-
-      // 공정별 카운터 초기화
-      Object.keys(PROCESS_POSITIONS).forEach(processName => {
-        resetProcessCounter(processName);
-      });
-
-      // 현재 공정별 제품 수를 기준으로 카운터 설정
-      productsData
-        .filter(product => product.status === 'registered')
-        .forEach(product => {
-          incrementProcessCounter(product.currentPosition);
-        });
-
-      const productNodes = productsData
-        .filter(product => product.status === 'registered')
-        .map(product => ({
-          id: product.id,
-          type: 'product',
-          position: product.position,
-          data: {
-            ...product,
-            label: product.modelName
-          }
-        }));
-
-      setNodes(prevNodes => {
-        const processNodes = prevNodes.filter(node => node.type === 'process');
-        return [...processNodes, ...productNodes];
-      });
-      setProducts(productsData);
+      const products = await response.json();
+      setProducts(products);
     } catch (error) {
       console.error('Error loading products:', error);
       setError(error.message);
@@ -202,7 +174,6 @@ function App() {
         setNodes(flowData.nodes || []);
         setEdges(flowData.edges || []);
         
-        // Y 위치 초기화는 여기서 한 번만 수행
         initializeYPositions(flowData.nodes || []);
         
         await loadProducts();

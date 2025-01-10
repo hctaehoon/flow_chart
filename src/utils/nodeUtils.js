@@ -5,6 +5,8 @@ import {
   INCOMING_NODE_SPACING 
 } from '../constants/processPositions';
 
+const API_URL = 'http://43.203.179.67:3001/api';
+
 // 공정별 현재 등록된 노드 수를 추적하기 위한 전역 카운터
 const processCounters = {
   '입고': 0,
@@ -297,7 +299,7 @@ const updateNodePositions = async (updates) => {
 
   try {
     // db.json 업데이트
-    await fetch('http://43.203.179.67:3001/api/nodes/batch-update', {
+    await fetch(`${API_URL}/nodes/batch-update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates)
@@ -305,7 +307,7 @@ const updateNodePositions = async (updates) => {
 
     // products.json 업데이트
     for (const update of updates) {
-      await fetch(`http://43.203.179.67:3001/api/products/${update.id}`, {
+      await fetch(`${API_URL}/products/${update.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ position: update.position })
@@ -352,7 +354,7 @@ const updateMachineStatus = async (nodes) => {
 
     // 설비 상태 일괄 업데이트
     for (const update of updates) {
-      await fetch(`http://43.203.179.67:3001/api/nodes/${update.id}`, {
+      await fetch(`${API_URL}/nodes/${update.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -362,7 +364,7 @@ const updateMachineStatus = async (nodes) => {
     }
 
     // 업데이트된 flow 데이터 반환
-    const flowResponse = await fetch('http://43.203.179.67:3001/api/flow');
+    const flowResponse = await fetch(`${API_URL}/flow`);
     if (!flowResponse.ok) throw new Error('Failed to get flow data');
     return await flowResponse.json();
   } catch (error) {
@@ -375,7 +377,7 @@ const updateMachineStatus = async (nodes) => {
 export const updateAFVIStatus = async (productId, afviStatus) => {
   try {
     // 상태 업데이트
-    const response = await fetch(`http://43.203.179.67:3001/api/products/${productId}`, {
+    const response = await fetch(`${API_URL}/products/${productId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -386,7 +388,7 @@ export const updateAFVIStatus = async (productId, afviStatus) => {
     if (!response.ok) throw new Error('Failed to update AFVI status');
 
     // 노드 재정렬 및 설비 상태 업데이트
-    const flowResponse = await fetch('http://43.203.179.67:3001/api/flow');
+    const flowResponse = await fetch(`${API_URL}/flow`);
     if (!flowResponse.ok) throw new Error('Failed to get flow data');
     const flowData = await flowResponse.json();
 
@@ -406,7 +408,7 @@ export const updateAFVIStatus = async (productId, afviStatus) => {
 // 노드 데이터 업데이트 함수 추가
 const updateNodeData = async (nodeId, newData) => {
   try {
-    const response = await fetch(`http://43.203.179.67:3001/api/nodes/${nodeId}`, {
+    const response = await fetch(`${API_URL}/nodes/${nodeId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -428,7 +430,7 @@ const updateNodeData = async (nodeId, newData) => {
 // 기존 기능 유지
 export const moveToShippingList = async (productId) => {
   try {
-    const response = await fetch(`http://43.203.179.67:3001/api/products/${productId}/ship`, {
+    const response = await fetch(`${API_URL}/products/${productId}/ship`, {
       method: 'POST',
     });
     
@@ -444,7 +446,7 @@ export const moveToShippingList = async (productId) => {
 // 제품 위치 업데이트 함수 수정
 export const updateProductPosition = async (productId, newProcess, newPosition) => {
   try {
-    const response = await fetch(`http://43.203.179.67:3001/api/products/${productId}`, {
+    const response = await fetch(`${API_URL}/products/${productId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -472,7 +474,7 @@ export const updateProductPosition = async (productId, newProcess, newPosition) 
       AFVINodePositions.removeNode(productId);
     }
 
-    const flowResponse = await fetch('http://43.203.179.67:3001/api/flow');
+    const flowResponse = await fetch(`${API_URL}/flow`);
     if (!flowResponse.ok) throw new Error('Failed to get flow data');
     const flowData = await flowResponse.json();
 
