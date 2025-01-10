@@ -17,17 +17,15 @@ const PORT = process.env.PORT || 3001;
 
 // CORS 설정 수정
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['http://43.203.179.67:5173', 'http://43.203.179.67'] 
-    : 'http://localhost:5173',
+  origin: ['http://43.203.179.67:5173', 'http://43.203.179.67'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials: true,
   optionsSuccessStatus: 200
 }));
 
-// 보안 헤더 추가
+// 보안 헤더 수정
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://43.203.179.67:5173');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();

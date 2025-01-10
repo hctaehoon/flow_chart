@@ -7,12 +7,5 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',  // 모든 네트워크 인터페이스에서 수신
     port: 5173,
-    proxy: {
-      '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
   },
 })
