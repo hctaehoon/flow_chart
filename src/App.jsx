@@ -41,19 +41,34 @@ function App() {
     process: (props) => <MemoizedProcessNode {...props} products={products} />
   }), [products]);
 
+  // fetchData 유틸리티 함수 추가
+  const fetchData = async (url, options = {}) => {
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  };
+
   // 2. 모든 callback hooks
   const onNodesChange = useCallback(
     (changes) => {
       const updatedNodes = applyNodeChanges(changes, nodes);
       setNodes(updatedNodes);
       
+      // 노드 변경사항 서버에 저장
       fetchData(`${API_URL}/nodes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedNodes),
-      });
+      }).catch(console.error);
     },
     [nodes]
   );
@@ -138,12 +153,37 @@ function App() {
 
   const loadProducts = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/products`);
-      if (!response.ok) {
-        throw new Error('Failed to load products');
-      }
-      const products = await response.json();
-      setProducts(products);
+      const productsData = await fetchData(`${API_URL}/products`);
+      
+      // 공정별 카운터 초기화
+      Object.keys(PROCESS_POSITIONS).forEach(processName => {
+        resetProcessCounter(processName);
+      });
+
+      // 현재 공정별 제품 수를 기준으로 카운터 설정
+      productsData
+        .filter(product => product.status === 'registered')
+        .forEach(product => {
+          incrementProcessCounter(product.currentPosition);
+        });
+
+      const productNodes = productsData
+        .filter(product => product.status === 'registered')
+        .map(product => ({
+          id: product.id,
+          type: 'product',
+          position: product.position,
+          data: {
+            ...product,
+            label: product.modelName
+          }
+        }));
+
+      setNodes(prevNodes => {
+        const processNodes = prevNodes.filter(node => node.type === 'process');
+        return [...processNodes, ...productNodes];
+      });
+      setProducts(productsData);
     } catch (error) {
       console.error('Error loading products:', error);
       setError(error.message);
@@ -188,11 +228,11 @@ function App() {
     loadInitialData();
   }, [loadProducts]);
 
-  // 주기적인 데이터 업데이트 (선택적)
+  // 자동 새로고침 추가
   useEffect(() => {
     const interval = setInterval(() => {
       loadProducts();
-    }, 5000); // 5초마다 업데이트
+    }, 2000); // 2초마다 데이터 새로고침
 
     return () => clearInterval(interval);
   }, [loadProducts]);

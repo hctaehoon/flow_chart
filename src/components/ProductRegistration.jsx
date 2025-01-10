@@ -54,6 +54,7 @@ function ProductRegistration({ onProductRegistered }) {
         route: 'ROUTE1'
       });
       
+      // 즉시 데이터 새로고침
       onProductRegistered();
     } catch (error) {
       console.error('Error registering product:', error);
